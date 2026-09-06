@@ -1,0 +1,20 @@
+{
+  "entries": [
+    {
+      "symbol": 1,
+      "materialAddress": "Cube_Red"
+    },
+    {
+      "symbol": 2,
+      "materialAddress": "Cube_Yellow"
+    },
+    {
+      "symbol": 3,
+      "materialAddress": "Cube_Blue"
+    },
+    {
+      "symbol": 4,
+      "materialAddress": "Cube_Violet"
+    }
+  ]
+}
