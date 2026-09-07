@@ -16,12 +16,6 @@ namespace Game.Infrastructure
             }
         }
 
-        public static string Full
-        {
-            get
-            {
-                return Path.Combine(ApplicationFolder, FileName);
-            }
-        }
+        public static string Full => Path.Combine(ApplicationFolder, FileName);
     }
 }

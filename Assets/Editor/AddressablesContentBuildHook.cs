@@ -1,9 +1,7 @@
 using UnityEditor.AddressableAssets;
-using UnityEditor.AddressableAssets.Build;
 using UnityEditor.AddressableAssets.Settings;
 using UnityEditor.Build;
 using UnityEditor.Build.Reporting;
-using UnityEngine;
 
 namespace Game.Editor
 {
@@ -22,18 +20,14 @@ namespace Game.Editor
             var settings = AddressableAssetSettingsDefaultObject.Settings;
             if (settings == null)
             {
-                throw new BuildFailedException(
-                    "Нет настроек Addressables.\nWindow → Asset Management → Addressables → Groups — создайте их там.");
+                throw new BuildFailedException("Нет настроек Addressables");
             }
 
-            AddressableAssetSettings.BuildPlayerContent(out AddressablesPlayerBuildResult result);
-
-            if (!string.IsNullOrEmpty(result.Error))
+            if (settings.BuildAddressablesWithPlayerBuild  == AddressableAssetSettings.PlayerBuildOption.DoNotBuildWithPlayer)
             {
-                throw new BuildFailedException($"Addressables не собрались: {result.Error}");
+                throw new BuildFailedException(
+                    "Addressables не соберутся вместе с плеером.");
             }
-
-            Debug.Log($"Контент Addressables собран за {result.Duration:F1} с.");
         }
     }
 }

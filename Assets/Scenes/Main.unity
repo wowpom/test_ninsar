@@ -279,8 +279,6 @@ MonoBehaviour:
     TypeName: 
   autoRun: 1
   autoInjectGameObjects: []
-  _gridView: {fileID: 1578263205}
-  _windowSize: 3
 --- !u!4 &1514586262
 Transform:
   m_ObjectHideFlags: 0

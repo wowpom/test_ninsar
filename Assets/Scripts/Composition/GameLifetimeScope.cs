@@ -19,6 +19,7 @@ namespace Game.Composition
 
             builder.Register<IGridSource, FileGridSource>(Lifetime.Singleton);
             builder.Register<IAssetProvider, AddressablesAssetProvider>(Lifetime.Singleton);
+            builder.Register<GameControls>(Lifetime.Singleton);
             builder.Register<IMoveInput, InputSystemMoveInput>(Lifetime.Singleton);
             builder.Register<IErrorPresenter, ErrorOverlayView>(Lifetime.Singleton);
 
@@ -28,6 +29,7 @@ namespace Game.Composition
 
             builder.Register<GridSessionController>(Lifetime.Singleton);
 
+            builder.RegisterEntryPoint<QuitOnEscape>();
             builder.RegisterEntryPoint<GameEntryPoint>();
         }
     }

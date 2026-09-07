@@ -1,39 +1,25 @@
 using System;
 using Game.Core;
 using Game.Domain;
+using UnityEngine;
 using UnityEngine.InputSystem;
 
 namespace Game.Presentation
 {
     public sealed class InputSystemMoveInput : IMoveInput
     {
-        private const string UpPrimaryBinding = "<Keyboard>/w";
-        private const string UpSecondaryBinding = "<Keyboard>/upArrow";
-        private const string DownPrimaryBinding = "<Keyboard>/s";
-        private const string DownSecondaryBinding = "<Keyboard>/downArrow";
-        private const string LeftPrimaryBinding = "<Keyboard>/a";
-        private const string LeftSecondaryBinding = "<Keyboard>/leftArrow";
-        private const string RightPrimaryBinding = "<Keyboard>/d";
-        private const string RightSecondaryBinding = "<Keyboard>/rightArrow";
+        private const float DeadZoneSqr = 0.25f;
 
-        private readonly DirectionAction[] _actions;
+        private readonly GameControls _controls;
+        private readonly Action<InputAction.CallbackContext> _handler;
 
         private bool _disposed;
 
-        public InputSystemMoveInput()
+        public InputSystemMoveInput(GameControls controls)
         {
-            _actions = new[]
-            {
-                CreateAction(MoveDirection.Up, UpPrimaryBinding, UpSecondaryBinding),
-                CreateAction(MoveDirection.Down, DownPrimaryBinding, DownSecondaryBinding),
-                CreateAction(MoveDirection.Left, LeftPrimaryBinding, LeftSecondaryBinding),
-                CreateAction(MoveDirection.Right, RightPrimaryBinding, RightSecondaryBinding),
-            };
-
-            foreach (var directionAction in _actions)
-            {
-                directionAction.Subscribe();
-            }
+            _controls = controls;
+            _handler = OnMove;
+            _controls.Gameplay.Move.performed += _handler;
         }
 
         public event Action<MoveDirection> Moved;
@@ -45,10 +31,7 @@ namespace Game.Presentation
                 return;
             }
 
-            foreach (var directionAction in _actions)
-            {
-                directionAction.Enable();
-            }
+            _controls.Gameplay.Move.Enable();
         }
 
         public void Disable()
@@ -58,10 +41,7 @@ namespace Game.Presentation
                 return;
             }
 
-            foreach (var directionAction in _actions)
-            {
-                directionAction.Disable();
-            }
+            _controls.Gameplay.Move.Disable();
         }
 
         public void Dispose()
@@ -73,61 +53,38 @@ namespace Game.Presentation
 
             _disposed = true;
 
-            foreach (var directionAction in _actions)
-            {
-                directionAction.Dispose();
-            }
-
+            _controls.Gameplay.Move.performed -= _handler;
+            _controls.Gameplay.Move.Disable();
             Moved = null;
         }
 
-        private DirectionAction CreateAction(MoveDirection direction, string primaryBinding, string secondaryBinding)
+        private void OnMove(InputAction.CallbackContext context)
         {
-            var action = new InputAction(direction.ToString(), InputActionType.Button);
-
-            action.AddBinding(primaryBinding);
-            action.AddBinding(secondaryBinding);
-
-            Action<InputAction.CallbackContext> handler = context =>
+            if (!TryReadDirection(context.ReadValue<Vector2>(), out var direction))
             {
-                Moved?.Invoke(direction);
-            };
+                return;
+            }
 
-            return new DirectionAction(action, handler);
+            Moved?.Invoke(direction);
         }
 
-        private sealed class DirectionAction
+        private static bool TryReadDirection(Vector2 value, out MoveDirection direction)
         {
-            private readonly InputAction _action;
-            private readonly Action<InputAction.CallbackContext> _handler;
+            direction = default;
 
-            public DirectionAction(InputAction action, Action<InputAction.CallbackContext> handler)
+            if (value.sqrMagnitude < DeadZoneSqr)
             {
-                _action = action;
-                _handler = handler;
+                return false;
             }
 
-            public void Subscribe()
+            if (Mathf.Abs(value.x) > Mathf.Abs(value.y))
             {
-                _action.performed += _handler;
+                direction = value.x > 0f ? MoveDirection.Right : MoveDirection.Left;
+                return true;
             }
 
-            public void Enable()
-            {
-                _action.Enable();
-            }
-
-            public void Disable()
-            {
-                _action.Disable();
-            }
-
-            public void Dispose()
-            {
-                _action.performed -= _handler;
-                _action.Disable();
-                _action.Dispose();
-            }
+            direction = value.y > 0f ? MoveDirection.Up : MoveDirection.Down;
+            return true;
         }
     }
 }
