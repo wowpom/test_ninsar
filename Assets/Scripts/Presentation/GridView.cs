@@ -38,7 +38,7 @@ namespace Game.Presentation
             if (_assetProvider == null || _paletteLoader == null)
             {
                 throw new InvalidOperationException(
-                    $"{nameof(IAssetProvider)} и {nameof(CubePaletteLoader)} не пришли — вид не зарегистрирован в контейнере.");
+                    $"{nameof(IAssetProvider)} и {nameof(CubePaletteLoader)} не пришли. {nameof(GridView)} нет в контейнере.");
             }
 
             if (_cubes != null)
@@ -93,7 +93,7 @@ namespace Game.Presentation
             if (window.Size != _windowSize)
             {
                 throw new ArgumentException(
-                    $"Окно {window.Size}×{window.Size}, а вид собран под {_windowSize}×{_windowSize}.",
+                    $"Окно {window.Size}×{window.Size}, а кубы собраны под {_windowSize}×{_windowSize}.",
                     nameof(window));
             }
 
