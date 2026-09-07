@@ -34,7 +34,7 @@ namespace Game.Composition
 
                 if (!result.Success)
                 {
-                    _errorPresenter.Show(result.Error);
+                    await _errorPresenter.ShowAsync(result.Error, cancellation);
                     return;
                 }
 
@@ -48,7 +48,9 @@ namespace Game.Composition
             }
             catch (Exception exception)
             {
-                _errorPresenter.Show($"Не получилось запустить: {exception.Message}");
+                await _errorPresenter.ShowAsync(
+                    $"Не получилось запустить: {exception.Message}",
+                    cancellation);
             }
         }
     }
