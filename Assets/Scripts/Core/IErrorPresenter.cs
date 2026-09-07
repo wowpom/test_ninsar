@@ -1,7 +1,10 @@
+using System.Threading;
+using Cysharp.Threading.Tasks;
+
 namespace Game.Core
 {
     public interface IErrorPresenter
     {
-        void Show(string message);
+        UniTask ShowAsync(string message, CancellationToken cancellationToken);
     }
 }

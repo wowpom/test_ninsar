@@ -21,7 +21,7 @@ namespace Game.Composition
             builder.Register<IAssetProvider, AddressablesAssetProvider>(Lifetime.Singleton);
             builder.Register<GameControls>(Lifetime.Singleton);
             builder.Register<IMoveInput, InputSystemMoveInput>(Lifetime.Singleton);
-            builder.Register<IErrorPresenter, ErrorOverlayView>(Lifetime.Singleton);
+            builder.Register<IErrorPresenter, ErrorOverlayPresenter>(Lifetime.Singleton);
 
             builder.Register<CubePaletteLoader>(Lifetime.Singleton);
 
