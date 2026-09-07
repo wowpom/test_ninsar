@@ -103,4 +103,3 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 24169dcb900494d45ae9e19f1968365e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Game::Game.Presentation.CubeView
-  _renderer: {fileID: 2378835113812880504}

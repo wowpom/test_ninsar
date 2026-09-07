@@ -5,7 +5,7 @@ namespace Game.Presentation
     [RequireComponent(typeof(MeshRenderer))]
     public sealed class CubeView : MonoBehaviour
     {
-        [SerializeField] [HideInInspector] private MeshRenderer _renderer;
+        private MeshRenderer _renderer;
 
         public void Apply(Material material)
         {
@@ -19,10 +19,7 @@ namespace Game.Presentation
 
         private void Awake()
         {
-            if (_renderer == null)
-            {
-                _renderer = GetComponent<MeshRenderer>();
-            }
+            _renderer = GetComponent<MeshRenderer>();
         }
     }
 }
